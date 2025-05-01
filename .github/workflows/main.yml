@@ -1,17 +1,44 @@
-name: Greetings
+name: CI
 
-on: [pull_request_target, issues]
+on:
+  push:
+    branches: ["main"]
+
+  pull_request:
+    branches: ["main"]
+
+  workflow_dispatch:
 
 jobs:
-  greeting:
+  build-app:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+
     steps:
-    # https://github.com/actions/first-interaction
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+  build-api-app:
+    runs-on: windows-latest
+
+    steps:
+      - run: echo "building api independently"
+
+  build-db:
+    needs: build-app
+    runs-on: windows-latest
+
+    steps:
+      - run: echo "Hello Windows"
+
+  package:
+    needs: [build-app, build-db]
+    runs-on: macos-latest
+    steps:
+      - run: echo "Hello MacOS"
