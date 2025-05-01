@@ -1,4 +1,4 @@
-name: List all default GitHub variables
+name: "List all default GitHub variables"
 
 on:
   workflow_dispatch:
